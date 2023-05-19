@@ -10,4 +10,5 @@
 
         public bool IsCompleted { get; set; }
     }
+    //класс задач
 }
