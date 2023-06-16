@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ToDoListWebAPI_HW.Models;
 
 namespace ToDoListWebAPI_HW.Controllers
 {
@@ -83,22 +84,4 @@ namespace ToDoListWebAPI_HW.Controllers
         }
         //ендпоинт для получения одной задачи по id
     }
-
-    public class ChangeTargetRequest
-    {
-        public string NewTargetValue { get; set; }
-
-        public string Description { get; set; }
-
-        public bool IsCompleted { get; set; }
-    }
-    //класс для создания объекта запроса на изменение задачи
-
-    public class CreateTargetRequest
-    {
-        public string TargetValue { get; set; }
-
-        public string Description { get; set; }
-    }
-    //класс для создания объекта запроса на создание задачи
 }
