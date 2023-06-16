@@ -2,7 +2,7 @@
 
 namespace ToDoListWebAPI_HW.Services
 {
-    public class DataRegister : IDataRegister
+    public class DataRegisterService : IDataRegisterService
     {
         private readonly List<ITarget> targets = new List<ITarget>();
 
@@ -55,6 +55,11 @@ namespace ToDoListWebAPI_HW.Services
         public ITarget GetTarget(int id)
         {
             return targets.FirstOrDefault(x => x.Id == id);
+        }
+
+        public int GetLastId()
+        {
+            return targets[targets.Count - 1].Id;
         }
     }
 }
