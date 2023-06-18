@@ -12,17 +12,17 @@ namespace ToDoListWebAPI_HW.Controllers
     {
         private readonly IDataRegisterService dataRegister;
 
-        ToDoListController(IDataRegisterService dataRegister) 
+        public ToDoListController(IDataRegisterService dataRegister) 
         {
             this.dataRegister = dataRegister;
-            dataRegister.Add(new Target { Id = 1, TargetValue = "Wake up" });
         }
         //список с задачами
 
         [HttpGet]
         public ActionResult GetTargets() 
         {
-            if(dataRegister.GetTargets() != null) 
+            var targets = dataRegister.GetTargets();
+            if (targets is not null) 
             {
                 return Ok(dataRegister.GetTargets());
             }
