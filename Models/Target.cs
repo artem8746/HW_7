@@ -1,6 +1,6 @@
-﻿namespace ToDoListWebAPI_HW
+﻿namespace ToDoListWebAPI_HW.Models
 {
-    public class Target
+    public class Target : ITarget
     {
         public int Id { get; set; }
 
@@ -10,4 +10,5 @@
 
         public bool IsCompleted { get; set; }
     }
+    //класс задач
 }

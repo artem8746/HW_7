@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ToDoListWebAPI_HW.Models;
+using ToDoListWebAPI_HW.Services;
 
 namespace ToDoListWebAPI_HW.Controllers
 {
@@ -8,15 +10,21 @@ namespace ToDoListWebAPI_HW.Controllers
 
     public class ToDoListController : ControllerBase
     {
-        public static List<Target> targets = new List<Target>() { new Target { Id = 12, TargetValue = "Wake up" } };
+        private readonly IDataRegisterService dataRegister;
+
+        public ToDoListController(IDataRegisterService dataRegister) 
+        {
+            this.dataRegister = dataRegister;
+        }
         //список с задачами
 
         [HttpGet]
         public ActionResult GetTargets() 
         {
-            if(targets != null) 
+            var targets = dataRegister.GetTargets();
+            if (targets is not null) 
             {
-                return Ok(targets);
+                return Ok(dataRegister.GetTargets());
             }
 
             return StatusCode(404);
@@ -28,13 +36,13 @@ namespace ToDoListWebAPI_HW.Controllers
         {
             var target = new Target
             {
-                Id = targets[targets.Count() - 1].Id + 1,
+                Id = dataRegister.GetLastId() + 1,
                 TargetValue = request.TargetValue,
                 Description = request.Description,
                 IsCompleted = false
             };
 
-            targets.Add(target);
+            dataRegister.Add(target);
 
             return Ok(target);
         }
@@ -42,14 +50,11 @@ namespace ToDoListWebAPI_HW.Controllers
 
         [HttpPatch("{id}")]
         public ActionResult ChangeTarget([FromRoute] int id, [FromBody] ChangeTargetRequest request)
-        {            
-            var target = targets.FirstOrDefault(x => x.Id == id);
-            if(target != null)
+        {
+            var target = dataRegister.ChangeTarget(request, id);
+
+            if(target is not null)
             {
-                target.TargetValue = request.NewTargetValue;
-                target.IsCompleted = request.IsCompleted;
-                target.Description = request.Description;
-                
                 return Ok(target);
             }    
             else
@@ -60,45 +65,26 @@ namespace ToDoListWebAPI_HW.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteTarget([FromRoute] int id)
         {
-            var target = targets.FirstOrDefault(x => x.Id == id);
-            if (target != null)
+            var target = dataRegister.DeleteTarget(id);
+            if (target is not null)
             {
-                Ok(targets.Remove(target));
                 return Ok(target);
             }
-            else
-                return BadRequest();
+            
+            return BadRequest();
         }
         //ендпоинт для удаления задач по id
 
         [HttpGet("{id}")]
         public ActionResult GetTarget([FromRoute] int id)
         {
-            var target = targets.FirstOrDefault(x => x.Id == id);
+            var target = dataRegister.GetTarget(id);
 
-            if(target != null)
+            if(target is not null)
                 return Ok(target);
 
             return BadRequest();
-        }
+        }   
         //ендпоинт для получения одной задачи по id
     }
-
-    public class ChangeTargetRequest
-    {
-        public string NewTargetValue { get; set; }
-
-        public string Description { get; set; }
-
-        public bool IsCompleted { get; set; }
-    }
-    //класс для создания объекта запроса на изменение задачи
-
-    public class CreateTargetRequest
-    {
-        public string TargetValue { get; set; }
-
-        public string Description { get; set; }
-    }
-    //класс для создания объекта запроса на создание задачи
 }
