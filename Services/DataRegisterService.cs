@@ -59,7 +59,7 @@ namespace ToDoListWebAPI_HW.Services
 
         public int GetLastId()
         {
-            return targets[targets.Count - 1].Id;
+            return (targets.Count > 0) ? targets[targets.Count - 1].Id : 0;
         }
     }
 }
